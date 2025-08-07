@@ -1,4 +1,4 @@
-import { getProducts , postProduct } from '../model/productDB.js'
+import { getProducts , postProduct , deleteProduct , updateProduct } from '../model/productDB.js'
 
 export const getProductCon= async(req, res) => {
     try {
@@ -8,8 +8,7 @@ export const getProductCon= async(req, res) => {
     }
 }
 
-
- export const postProductCon = async (req, res) => {
+export const postProductCon = async (req, res) => {
   try {
     const {
       products_id,
@@ -33,6 +32,38 @@ export const getProductCon= async(req, res) => {
   } catch (err) {
     console.error("Server Error:", err);
     res.status(500).json({ error : "Internal server error" });
+  }
+};
+
+export const deleteProductCon = async (req, res) => {
+  try {
+    const { products_id } = req.body;
+
+    if (!products_id) {
+      return res.status(400).json({ error: "Missing required field: products_id" });
+    }
+
+    await deleteProduct(products_id);
+
+    res.status(200).json({ message: "Product deleted successfully" });
+  } catch (err) {
+    console.error("Server Error:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+
+export const updateProductCon = async (req, res) => {
+  try {
+    const { products_id, name, description, price, discount, stock, category_id, image_url, is_new } = req.body;
+    if (!products_id) {
+      return res.status(400).json({ error: "Missing required field: products_id" });
+    }
+    await updateProduct(products_id, name, description, price, discount, stock, category_id, image_url, is_new);
+    res.status(200).json({ message: "Product updated successfully" });
+  } catch (err) {
+    console.error("Server Error:", err);
+    res.status(500).json({ error: "Internal server error" });
   }
 };
 
