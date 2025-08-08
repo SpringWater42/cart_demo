@@ -19,6 +19,8 @@ export const postProduct = async (products_id, name, description, price, discoun
   await pool.query(query, values);
 };
 
+
+
 export const deleteProduct = async (products_id) => {
   const query = ` DELETE FROM products WHERE products_id = ? `;
   const values = [products_id];
