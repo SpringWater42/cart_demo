@@ -20,7 +20,11 @@
             class="qty-input"
           />
           <button @click="incrementQty(product.products_id, product.stock)">+</button>
-          <button @click="addToCart(product)">Add to Cart</button>
+          <!-- Add to cart -->
+          <button @click="() =>{
+            addToCart(product)
+          }
+          ">Add to Cart</button>
         </div>
       </div>
     </div>
@@ -42,20 +46,6 @@ export default {
   mounted() {
     this.$store.dispatch("getProducts");
   },
-  watch: {
-    products: {
-      immediate: true,
-      handler(newProducts) {
-        if (Array.isArray(newProducts)) {
-          newProducts.forEach((product) => {
-            if (!(product.products_id in this.quantities)) {
-              this.quantities[product.products_id] = 1;
-            }
-          });
-        }
-      },
-    },
-  },
   methods: {
     incrementQty(id, stock) {
       if (this.quantities[id] < stock) {
@@ -70,8 +60,12 @@ export default {
     addToCart(product) {
       const qty = this.quantities[product.products_id] || 1;
       // Replace this with your actual add-to-cart logic or Vuex action
-      alert(`Added ${qty} of ${product.name} to cart!`);
-    },
+      this.$store.dispatch("addProductToCart", {
+        user_id: 1,
+        ...product,
+        quantity: qty,
+      });
+    }
   },
 };
 </script>
